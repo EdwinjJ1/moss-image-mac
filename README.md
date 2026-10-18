@@ -9,6 +9,19 @@ maintained by [Evanlin](https://github.com/EdwinjJ1). The model and original inf
 OpenMOSS. This fork adds staged MPS inference, prompt embedding caching, FP16 DiT support,
 and Mac launch scripts while retaining the upstream Gradio UI.
 
+## Anime characters, made on a Mac
+
+| DeepSeek | Claude | ChatGPT |
+| --- | --- | --- |
+| [![DeepSeek anime character](assets/samples/deepseek-anime/01.png)](assets/samples/deepseek-anime/01.png) | [![Claude anime character](assets/samples/claude-anime/01.png)](assets/samples/claude-anime/01.png) | [![ChatGPT anime character](assets/samples/chatgpt-anime/01.png)](assets/samples/chatgpt-anime/01.png) |
+| [Prompt](assets/samples/deepseek-anime/prompt.txt) · [Parameters](assets/samples/deepseek-anime/parameters.json) | [Prompt](assets/samples/claude-anime/prompt.txt) · [Parameters](assets/samples/claude-anime/parameters.json) | [Prompt](assets/samples/chatgpt-anime/prompt.txt) · [Parameters](assets/samples/chatgpt-anime/parameters.json) |
+
+Three unofficial fan character concepts inspired by DeepSeek, Claude and ChatGPT.
+Generated locally with MOSS-Image-SFT on the same M1 Max / 32 GB Mac: **768×1024, 28 steps, float16 DiT**.
+The reference ideas were described in English prompts; the model received text only.
+The headings and taglines are model-generated, with no lettering or image retouching afterward.
+[Seeds, timings and reproduction details](assets/samples/README.md).
+
 ![Generated locally on an M1 Max / 32 GB Mac](assets/samples/mac-chalkboard/01.png)
 
 *Real Mac output: MOSS-Image-SFT, 1024×1024, 20 steps, seed 42, BF16, 320.362 seconds
@@ -131,6 +144,6 @@ terms. No model weights are included in this repository.
 - [Original user guide](USERGUIDE.md) · [中文用户指南](USERGUIDE_ZH.md)
 - [Upstream ComfyUI integration](comfyui/README.md) (not the recommended Mac quick start)
 
-Except for the labeled Mac sample above, bundled showcase images and the website are inherited
+Except for the labeled Mac samples above, bundled showcase images and the website are inherited
 from upstream and should not be read as Mac benchmarks. Upstream homepage deployment and
 ComfyUI registry publishing are not part of this fork's release process.

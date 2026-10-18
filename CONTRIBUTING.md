@@ -10,7 +10,7 @@ Thanks for helping make MOSS-Image usable on Mac. Chinese and English reports ar
 
 Open an issue before a large change. Keep pull requests focused, preserve upstream attribution,
 and explain what you tested. Never commit model weights, local paths, credentials or personal outputs
-without reviewing them. The `assets/samples/mac-chalkboard` directory is the maintainer's Mac example;
+without reviewing them. The `assets/samples/` directory contains the maintainer's Mac examples;
 other bundled examples come from upstream.
 
 ## Local checks

@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "model": "MOSS-Image-SFT",
+  "pipeline_class": "StagedMOSSImagePipeline",
+  "pipeline_module": "mps_runtime",
+  "parameters": {
+    "prompt": "An elegant anime character illustration designed as a collectible character poster, portrait canvas. A single adult woman personifying Claude stands in a graceful three-quarter pose, framed from her head to below her knees. She has exceptionally long flowing copper-orange hair, amber eyes, a thoughtful warm smile and an ivory ribbon with a small bronze sunburst hair ornament. Her modest high-collared ivory scholarly dress has intricate lace, long flowing sleeves, a fitted charcoal waistcoat, rust-orange ribbon ties, embroidered bronze sunburst ornaments and layered cream skirts. She holds an open leather-bound book carefully in both hands at waist height, its pages glowing with warm golden light. She is clearly an adult, with mature facial proportions and an elegant reserved manner. The setting is a tranquil sunlit library with curved wooden bookshelves, warm afternoon light, a few floating golden motes and delicately sketched botanical leaves. Professional Japanese animation key visual, precise delicate linework, rich cel shading, painterly luminous hair, soft rim light and intricate fabric details. Restrained coherent palette of terracotta, copper, warm ivory, dark brown and amber. Airy balanced composition, character occupies the central lower area, a clean warm ivory area at the upper left contains a large beautifully typeset dark brown English heading reading exactly \"CLAUDE\" and a smaller line beneath it reading exactly \"THINK WITH CARE\". All wording is English. Sharp expressive face, clear hands, calm and intelligent atmosphere, polished editorial anime poster.",
+    "negative_prompt": "nsfw, low quality, blurry, bad anatomy, deformed hands, extra fingers, extra limbs, duplicate character, watermark, signature, cropped head",
+    "height": 1024,
+    "width": 768,
+    "steps": 28,
+    "cfg": 3.0,
+    "shift": 5.0,
+    "seed": 20261019,
+    "num_images": 1,
+    "max_sequence_length": 4096,
+    "uncond_skip_layers": "22",
+    "slg_layers": "",
+    "slg_scale": 0.0,
+    "slg_start": 0.0,
+    "slg_stop": 1.0,
+    "offload": "model",
+    "compile_transformer": false
+  },
+  "sampler": "Euler",
+  "weight_dtype": "float16",
+  "vae_dtype": "float32",
+  "pipeline_sha256": "bb64bb466c3e699fc8433904d85893a4f4049da95160e62d694ad6398cac1650",
+  "model_config_sha256": {
+    "model_index.json": "ca80b1f562a506e0eb24afb1acb464fb583163e3c240c04e4bc69fea090db173",
+    "scheduler/scheduler_config.json": "707322832cc507dfb8c51c0e0cd04d44ee2d30a9b036b6f3c47d6c17aa71adf0",
+    "transformer/config.json": "3291c3a1c7adc22b8182a0de25ca8ec97474d72715ce84adbab09cc0be24f666",
+    "text_encoder/config.json": "b31ee18a242bcfcccbe740f825f6b1d3ae231b0655eeecb5de3e98d504b7d68c",
+    "vae/config.json": "cc77f3f0ce0357039c71018dc19edaa4fcceb0c2f7488fdc2b9c0580d6baafa1",
+    "tokenizer/chat_template.jinja": "a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715",
+    "tokenizer/tokenizer.json": "06b9509352d2af50381ab2247e083b80d32d5c0aba91c272ca9ff729b6a0e523",
+    "tokenizer/tokenizer_config.json": "bee8eba30f0eb4af73c0fe2cd06d0f89b657d7819941c438157ec42f7c80ea87"
+  },
+  "versions": {
+    "torch": "2.14.1",
+    "diffusers": "0.41.0",
+    "transformers": "5.20.1",
+    "accelerate": "1.15.0"
+  },
+  "gpu": null,
+  "elapsed_seconds": 367.596,
+  "images": [
+    "01.png"
+  ]
+}

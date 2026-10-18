@@ -7,7 +7,8 @@
   The UI polls every two seconds. Editing the selected example reloads its fields;
   adding/removing folders updates the gallery. Write complete JSON files atomically
   to avoid exposing incomplete edits. Runtime memory/compile settings stay unchanged.
-- `samples/`: selected MOSS-Image outputs, each accompanied by its `parameters.json`.
+- `samples/`: selected Mac-generated MOSS-Image outputs, each accompanied by its `parameters.json`.
+  See the [Mac sample gallery](samples/README.md) for the English character posters, prompts and measured generation times.
 
 The Gradio app saves each run to `outputs/gradio/<run-id>/`, including PNG images
 and a JSON record of the prompt, negative prompt, actual seed, dimensions, sampling

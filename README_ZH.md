@@ -8,6 +8,18 @@
 由 [Evanlin](https://github.com/EdwinjJ1) 维护。模型和原始推理代码来自 OpenMOSS；本项目新增
 MPS 分阶段推理、提示词缓存、FP16 DiT 支持和 Mac 启动脚本，沿用上游 Gradio 网页界面。
 
+## Mac 本地生成的动漫角色
+
+| DeepSeek | Claude | ChatGPT |
+| --- | --- | --- |
+| [![DeepSeek anime character](assets/samples/deepseek-anime/01.png)](assets/samples/deepseek-anime/01.png) | [![Claude anime character](assets/samples/claude-anime/01.png)](assets/samples/claude-anime/01.png) | [![ChatGPT anime character](assets/samples/chatgpt-anime/01.png)](assets/samples/chatgpt-anime/01.png) |
+| [Prompt](assets/samples/deepseek-anime/prompt.txt) · [Parameters](assets/samples/deepseek-anime/parameters.json) | [Prompt](assets/samples/claude-anime/prompt.txt) · [Parameters](assets/samples/claude-anime/parameters.json) | [Prompt](assets/samples/chatgpt-anime/prompt.txt) · [Parameters](assets/samples/chatgpt-anime/parameters.json) |
+
+DeepSeek、Claude、ChatGPT 的非官方同人角色设定，根据参考图中的人物特征，使用英文提示词生成。
+三张均在同一台 M1 Max / 32GB Mac 上使用 MOSS-Image-SFT 生成：**768×1024、28 步、DiT float16**。
+参考图中的人物特征被转写为文字描述；模型只接收文字输入。图中的英文标题和标语也由模型生成，未后期加字或修图。
+[查看 seed、实际耗时与复现方法](assets/samples/README.md)。
+
 ![M1 Max 32GB Mac 本地生成的中文黑板图](assets/samples/mac-chalkboard/01.png)
 
 *真实 Mac 出图：MOSS-Image-SFT，1024×1024，20 步，seed 42，BF16。
