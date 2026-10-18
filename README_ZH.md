@@ -8,6 +8,18 @@
 由 [Evanlin](https://github.com/EdwinjJ1) 维护。模型和原始推理代码来自 OpenMOSS；本项目新增
 MPS 分阶段推理、提示词缓存、FP16 DiT 支持和 Mac 启动脚本，沿用上游 Gradio 网页界面。
 
+## 新用户从这里开始
+
+| 你要做什么 | 看这里 |
+| --- | --- |
+| 从零安装、下载模型、部署、网页操作、保存与更新 | [完整入门指南](docs/GETTING_STARTED_ZH.md) |
+| 在哪里通过对话生成图片，怎么使用生成 Skill | [对话出图指南](docs/CHAT_ZH.md) |
+| 复现真实 Mac 样图 | [样图、提示词和参数](assets/samples/README.md) |
+
+**在哪里输入需求？** 网页用户在本机 `http://127.0.0.1:7860` 的 Prompt 框中输入；
+想通过对话操作，则在同一台 Mac 上、已打开此项目且能执行本地命令的助手里对话。
+助手通过 `scripts/generate-local.py` 调用同一个本地模型，网页本身没有内置聊天窗口。
+
 ## Mac 本地生成的动漫角色
 
 | DeepSeek | Claude | ChatGPT |
@@ -118,7 +130,7 @@ macOS、依赖版本、模型、精度、尺寸、步数、提示词是否已缓
 
 近期先补机型兼容性表，进行 FP16/BF16 及冷提示词/缓存提示词的同条件性能对照，改善安装和内存问题排查。
 量化及更低内存支持属于探索方向。开发与检查方法见 [CONTRIBUTING.md](CONTRIBUTING.md)。
-[群分享文案与初期路线](docs/LAUNCH_ZH.md) 可直接取用。
+[X / 小红书 / 抖音发布文案](docs/SOCIAL_ZH.md) 与[初期路线](docs/LAUNCH_ZH.md) 可直接取用。
 
 ## 上游与许可
 

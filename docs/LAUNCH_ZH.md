@@ -1,5 +1,7 @@
 # 发布文案与初期路线
 
+X、小红书、抖音的完整待发布素材见 [社交媒体文案](SOCIAL_ZH.md)。
+
 ## 可直接分享
 
 把 MOSS-Image 搬上 MacBook 了：基于 PyTorch / Diffusers 做了 Metal/MPS 适配，

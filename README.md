@@ -9,6 +9,18 @@ maintained by [Evanlin](https://github.com/EdwinjJ1). The model and original inf
 OpenMOSS. This fork adds staged MPS inference, prompt embedding caching, FP16 DiT support,
 and Mac launch scripts while retaining the upstream Gradio UI.
 
+## Start here
+
+| Goal | Guide |
+| --- | --- |
+| Install, download, launch, operate, save and update | [Step-by-step guide](docs/GETTING_STARTED.md) |
+| Generate through a conversation with a local assistant | [Conversation guide and Skill](docs/CHAT.md) |
+| Reproduce real Mac outputs | [Sample gallery and parameters](assets/samples/README.md) |
+
+**Where do I type?** Use the browser Prompt field at `http://127.0.0.1:7860`, or a local shell-capable
+assistant opened in this repository. The conversation workflow calls the same local model through
+`scripts/generate-local.py`; the web UI itself is not a chat client.
+
 ## Anime characters, made on a Mac
 
 | DeepSeek | Claude | ChatGPT |
