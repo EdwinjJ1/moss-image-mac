@@ -1,296 +1,122 @@
-<div align="center">
-  <p>
-    <img src="assets/lockup-light.svg#gh-light-mode-only" alt="MOSS-Image" width="520">
-    <img src="assets/lockup-dark.svg#gh-dark-mode-only" alt="MOSS-Image" width="520">
-  </p>
-  <p>
-    <a href="https://huggingface.co/OpenMOSS-Team/MOSS-Image-Base"><img alt="Hugging Face · MOSS-Image-Base" src="https://img.shields.io/badge/🤗%20Hugging%20Face-MOSS--Image--Base-ffc107?style=flat-square"></a>
-    &nbsp;
-    <a href="https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT"><img alt="Hugging Face · MOSS-Image-SFT" src="https://img.shields.io/badge/🤗%20Hugging%20Face-MOSS--Image--SFT-ffc107?style=flat-square"></a>
-    &nbsp;
-    <a href="https://modelscope.cn/models/openmoss/MOSS-Image-Base"><img alt="ModelScope · MOSS-Image-Base" src="assets/modelscope-base-badge.svg"></a>
-    &nbsp;
-    <a href="https://modelscope.cn/models/openmoss/MOSS-Image-SFT"><img alt="ModelScope · MOSS-Image-SFT" src="assets/modelscope-sft-badge.svg"></a>
-    &nbsp;
-    <a href="https://huggingface.co/spaces/OpenMOSS-Team/MOSS-Image"><img alt="Hugging Face Spaces · Demo" src="https://img.shields.io/badge/🤗%20Spaces-Demo-4f46e5?style=flat-square"></a>
-    &nbsp;
-    <a href="https://openmoss.github.io/MOSS-Image/"><img alt="Homepage" src="https://img.shields.io/badge/🌐%20Project-Homepage-2563eb?style=flat-square"></a>
-    &nbsp;
-    <a href="paper/MOSS_Image_Technical_Report.pdf"><img alt="Technical Report" src="https://img.shields.io/badge/📄%20Paper-Technical_Report-b31b1b?style=flat-square"></a>
-    &nbsp;
-    <a href="https://x.com/Open_MOSS"><img alt="Follow OpenMOSS on X" src="https://img.shields.io/badge/Follow-OpenMOSS-000000?style=flat-square&amp;logo=x&amp;logoColor=white"></a>
-    &nbsp;
-    <a href="https://qm.qq.com/q/hphM7VhaDu"><img alt="MOSS-Image QQ 交流群：755535143" src="https://img.shields.io/badge/QQ-755535143-12B7F5?style=flat-square&amp;logo=qq&amp;logoColor=white"></a>
-    &nbsp;
-    <a href="https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=7a3m2007-815f-409b-9c3d-a4129f5c058e"><img alt="MOSS-Builders 飞书交流群" src="assets/feishu-builders-badge.svg"></a>
-    &nbsp;
-    <a href="https://discord.gg/nXFWEyvbb"><img alt="MOSS-Image Discord 交流群" src="https://img.shields.io/badge/Discord-Community-5865F2?style=flat-square&amp;logo=discord&amp;logoColor=white"></a>
-  </p>
-  <p>
-    <a href="README.md">English</a> &nbsp; | &nbsp; <strong>简体中文</strong>
-  </p>
-</div>
+# MOSS-Image for Mac
 
-<a id="news"></a>
+**让 MOSS-Image 在 Apple Silicon Mac 上通过 PyTorch Metal/MPS 本地生成图片。**
 
-## 动态
+[English](README.md) · [快速开始](#快速开始) · [实现原理](#实现原理) · [反馈机型](https://github.com/EdwinjJ1/moss-image-mac/issues/new/choose)
 
-- **[2026-10-16]** 🎉 **MOSS-Image-Base** 和 **MOSS-Image-SFT** 正式发布！代码和模型权重已开放。
+这是 [OpenMOSS/MOSS-Image](https://github.com/OpenMOSS/MOSS-Image) 的实验性 Mac 适配分支，
+由 [Evanlin](https://github.com/EdwinjJ1) 维护。模型和原始推理代码来自 OpenMOSS；本项目新增
+MPS 分阶段推理、提示词缓存、FP16 DiT 支持和 Mac 启动脚本，沿用上游 Gradio 网页界面。
 
-  **核心特点：**
+![M1 Max 32GB Mac 本地生成的中文黑板图](assets/samples/mac-chalkboard/01.png)
 
-  - 📐 **布局控制：** 控制文字与视觉元素的位置。
-  - ✍️ **文字渲染：** 在图像中生成清晰、准确的文字。
-  - 📜 **长提示词支持：** 支持最长 4K tokens 的文本提示词。
-  - 🎨 **多样视觉风格：** 生成高质量的动漫风格与照片级写实图像。
-  - 🛠️ **易于微调：** 将基础模型适配到自定义任务和领域。
-  - ⚡ **紧凑高效：** 基于 5B 主干网络，实现高效图像生成。
-  - 🖥️ **异构 GPU 训练：** 采用替代 GPU 平台训练。
+*真实 Mac 出图：MOSS-Image-SFT，1024×1024，20 步，seed 42，BF16。
+记录中的完整生成调用耗时 320.362 秒，包含加载、模型切换和保存，不代表所有配置下的速度。
+[完整提示词和参数](assets/samples/mac-chalkboard/parameters.json)。当前启动脚本默认使用 FP16，
+上图则是 BF16 生成的。*
 
-<a id="user-guide"></a>
+## 能做什么
 
-## 用户指南
+- 用苹果 GPU 在本地运行文生图。
+- 分阶段加载文本编码器和扩散 Transformer，降低同时驻留的内存压力。
+- 缓存最近八组提示词编码；只改 seed、尺寸或步数时可复用。
+- 网页调整参数、生成图片，并保存图片和 `parameters.json`。
+- 从 ModelScope 断点续传下载模型，服务端提供 SHA-256 时校验文件。
+- 完成依赖安装和模型下载后，可离线启动。
 
-推荐推理参数、提示词示例、布局输入格式和 LoRA 训练建议，见
-**[中文用户指南](USERGUIDE_ZH.md)** 或 **[English user guide](USERGUIDE.md)**。
+## 兼容性与资源
 
-<a id="comfyui"></a>
-
-## ComfyUI
-
-本仓库实现了 MOSS-Image 的 ComfyUI 原生插件。
-
-在 **ComfyUI Manager** 中搜索 **MOSS-Image** 即可安装插件。
-我们正在积极推进合入 ComfyUI 官方仓库。
-
-[安装与使用](comfyui/README_ZH.md) · [示例工作流](comfyui/moss-image/example_workflows/moss-image.json)
-
-<a id="prompt-enhancer"></a>
-
-## 提示词增强 Skill
-
-[MOSS-Image Prompt Enhancer](skills/moss-image-prompt-enhancer/SKILL.md) 可将图像想法
-扩写为详细 caption 或空间 Layout 提示词，面向具备本地文件和 Python 工具的 GPT-6
-系列代理设计。随附脚本将像素坐标草稿转换为紧凑 JSON 和整数中心坐标，不调用图像生成服务。
-
-将 [skill 目录](skills/moss-image-prompt-enhancer) 安装到代理的技能目录后，使用
-`$moss-image-prompt-enhancer`，提供图像需求、caption 或 Layout 输出要求，以及画布尺寸。
-将编译结果粘贴到 MOSS-Image 的正向提示词中；使用 Layout 时，生成尺寸应与草稿一致。
-
-![MOSS-Image-Base 和 MOSS-Image-SFT](assets/teaser.webp)
-
-## 目录
-
-- [动态](#news)
-- [用户指南](#user-guide)
-- [ComfyUI](#comfyui)
-- [提示词增强 Skill](#prompt-enhancer)
-- [模型](#models)
-- [快速开始](#quick-start)
-  - [安装](#installation)
-  - [Python](#python)
-  - [Gradio](#gradio)
-  - [采样参数](#sampling-settings)
-  - [显存与性能](#memory-and-performance)
-- [Layout 布局生成](#layout-generation)
-- [Showcase](#showcase)
-- [引用](#citation)
-- [许可与致谢](#license)
-- [Star History](#star-history)
-
-<a id="models"></a>
-
-## 🤗 模型
-
-| 模型 | 说明 |
+| 硬件 | 当前状态 |
 | --- | --- |
-| [MOSS-Image-Base](https://huggingface.co/OpenMOSS-Team/MOSS-Image-Base) · [ModelScope](https://modelscope.cn/models/openmoss/MOSS-Image-Base) | 基础文生图模型 |
-| [MOSS-Image-SFT](https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT) · [ModelScope](https://modelscope.cn/models/openmoss/MOSS-Image-SFT) | 在精选数据上对 MOSS-Image-Base 微调得到的模型 |
+| M1 Max，32GB 统一内存 | 有上述 SFT 成功出图记录 |
+| 其他 M 系列芯片及内存容量 | 欢迎实测，目前未在本项目中确认 |
+| Intel Mac | Mac 启动脚本不支持 |
+| NVIDIA CUDA | 保留上游执行路径，本次 Mac 版本未验证 |
 
-### Base 与 SFT 对比
+建议先使用 **32GB 或更多统一内存**，为单个模型、下载文件和 Python 环境预留约 **40GB 磁盘空间**。
+本地完整 SFT 模型约 25GB。32GB 是已测试配置，并非已证明的最低配置。
+本版本尚未确认小内存 Mac 支持，也没有做权重量化。生成可能需要数分钟。
 
-在这个例子中，SFT 的文字分组更清晰，白板内容的排版更有条理。
+## 快速开始
 
-| MOSS-Image-Base | MOSS-Image-SFT |
-| --- | --- |
-| ![MOSS-Image-Base](assets/comparison/base.webp) | ![MOSS-Image-SFT](assets/comparison/sft.webp) |
-
-<!-- MOSS-Image-Base 使用 42 层扩散 Transformer、Qwen3.5-9B 文本编码器和 FLUX.2 VAE。 -->
-
-<a id="quick-start"></a>
-
-## 🚀 快速开始
-
-<a id="installation"></a>
-
-### 🛠️ 安装
+使用原生 arm64 终端、PyTorch 支持的 macOS 版本，推荐 Python 3.12（项目最低要求 3.10）。
+安装脚本默认使用 `python3`，也可通过 `MOSS_PYTHON=python3.12` 指定。
 
 ```bash
-git clone https://github.com/OpenMOSS/MOSS-Image.git
-cd MOSS-Image
-python -m venv .venv
-source .venv/bin/activate
-
-pip install -r requirements.txt
+git clone https://github.com/EdwinjJ1/moss-image-mac.git
+cd moss-image-mac
+bash scripts/setup-mac.sh
+bash scripts/fetch-modelscope.sh MOSS-Image-SFT
+bash scripts/gradio-mac.sh
 ```
 
-<a id="python"></a>
+打开 **http://127.0.0.1:7860**。第一次建议选择 **512×512、10 步、1 张图**，确认能生成后再增加尺寸和步数。
+新提示词需要先加载文本编码器，再切换到 DiT；相同提示词可复用编码缓存。加载阶段可能需要等待。
 
-### 🐍 Python
+[constraints-mac.txt](constraints-mac.txt) 固定了本地使用过的五个主要运行库版本。
+安装和下载需要网络；Mac 启动脚本只读取本地模型，关闭 Gradio 分析上报，默认仅监听本机地址。
+图片和参数会保存到 `outputs/gradio/`。
 
-```python
-import torch
-from diffusers import DiffusionPipeline
-
-pipe = DiffusionPipeline.from_pretrained(
-    "OpenMOSS-Team/MOSS-Image-Base",
-    custom_pipeline="pipeline_moss_image",
-    trust_remote_code=True,
-    torch_dtype={"default": torch.bfloat16, "vae": torch.float32},
-)
-pipe.scheduler = type(pipe.scheduler).from_config(pipe.scheduler.config)
-pipe.to("cuda")
-image = pipe(
-    "A wide view of a refrigerator beside a kitchen counter with a fruit bowl. A small sticky note on the refrigerator door is handwritten in Chinese:“\n记得买牛奶和鸡蛋！\n牛奶两盒，鸡蛋一打。\n顺便带一袋面包。”",
-    height=1456,
-    width=1456,
-    num_inference_steps=50,
-    guidance_scale=3.0,
-    uncond_skip_layers=[22],
-    generator=torch.Generator("cpu").manual_seed(42),
-).images[0]
-image.save("refrigerator_note.png")
-```
-
-<a id="gradio"></a>
-
-### 🎨 Gradio
+### 改用 Hugging Face 下载
 
 ```bash
-pip install -e '.[ui]'
-python gradio_app.py --model OpenMOSS-Team/MOSS-Image-Base
+.venv/bin/hf download OpenMOSS-Team/MOSS-Image-SFT --local-dir models/MOSS-Image-SFT
+bash scripts/gradio-mac.sh
 ```
 
-<a id="sampling-settings"></a>
+也支持 Base：先运行 `bash scripts/fetch-modelscope.sh MOSS-Image-Base`，
+然后启动时加 `--model "$PWD/models/MOSS-Image-Base"`。
 
-### 🎛️ 采样参数
+### 比较推理精度
 
-| 参数 | 默认值 |
-| --- | --- |
-| 采样器 | Flow-matching Euler |
-| 步数 | 50 |
-| CFG | 3 |
-| Shift | 5 |
-| 跳层 | 负向分支跳过第 22 层 |
-| 负面提示词（Python API） | 空 |
-
-采样与提示词建议见[用户指南](USERGUIDE_ZH.md)。
-
-<a id="memory-and-performance"></a>
-
-### ⚡ 显存与性能
-
-在 Gradio 的高级设置中选择 Memory mode：
-
-| 模式 | 行为 |
-| --- | --- |
-| GPU resident | 全模型驻留 GPU |
-| Component | 按需在 CPU 与 GPU 之间移动模型组件 |
-| Sequential · fallback | 更低显存占用，推理速度较慢 |
-
-显存不足时，选择 Sequential 或减小图像尺寸。
-Compile DiT 默认关闭，Sequential 模式下不可用。
-
-<a id="layout-generation"></a>
-
-## 📐 Layout 布局生成
-
-MOSS-Image 通过 JSON layout 输入控制复杂画面中的文字排版与物体布局，下图即为
-MOSS-Image 使用布局控制生成的结果。
-
-基于 layout，我们还可以实现受控编辑、用户友好的排版工具等应用。
-通过修改文字、元素描述和边界框，用户可以结构化地调整画面内容与布局。
-
-[![布局边界框](assets/showcase/layout-bboxes.webp)](assets/showcase/layout-bboxes.svg)
-
-将布局 JSON 粘贴到 Gradio 的 Prompt 输入框，即可指定场景、文字、物体及其位置。
-下面使用 `summary`/`items` 格式，以 **1024×1024** 画布为例，将内容保存为 `layout.json`：
-
-```json
-{
-  "summary": {
-    "meta": ["poster"],
-    "canvas": "single",
-    "caption": "A minimalist travel poster with a cream background, a blue mountain illustration, and the title EXPLORE at the top."
-  },
-  "items": [
-    {
-      "label": "text",
-      "caption": "Large dark-blue uppercase title centered at the top.",
-      "text": "EXPLORE",
-      "bbox": [-416, -384, -288, 384]
-    },
-    {
-      "label": "object",
-      "caption": "A flat blue mountain illustration in the lower center.",
-      "bbox": [-192, -288, 384, 288]
-    }
-  ],
-  "bbox_coord_space": "abs_centralized",
-  "bbox_format": "yxyx"
-}
+```bash
+MOSS_MPS_DIT_DTYPE=bfloat16 bash scripts/gradio-mac.sh
 ```
 
-- `summary.caption`：整体场景与风格描述。
-- `items`：各元素的 `label`、`caption` 和 `bbox`；需要生成文字时使用 `text` 指定内容。
-- `bbox_format: "yxyx"`：框坐标顺序为 `[y_min, x_min, y_max, x_max]`。
-- `bbox_coord_space: "abs_centralized"`：以画布中心为原点的像素坐标。
-  对于 1024×1024 画布，两轴范围均为 −512 到 +512，x 向右、y 向下递增。
-  对于宽 W、高 H 的画布，将常规左上角原点的 x 坐标减去 W/2、y 坐标减去 H/2 即可转换。
+启动脚本默认 DiT 使用 FP16，文本编码器使用 BF16，VAE 使用 FP32。
+这是浮点推理精度设置，没有对模型权重做量化。
 
-框坐标应与指定的输出尺寸一致。在 Gradio 中，将 JSON 粘贴到提示词输入框，
-并设置对应的宽高；使用 Python API 时，将 `json.dumps(layout, ensure_ascii=False)`
-作为提示词字符串传入。
+## 实现原理
 
-<a id="showcase"></a>
+Qwen 文本编码器约 17GB，扩散 Transformer 约 10GB，同时驻留会给 32GB Mac 带来内存压力。
+[mps_runtime.py](mps_runtime.py) 先加载编码器计算提示词编码，释放编码器后再加载 DiT 采样。
+这两个大模型只保留其中一个在 GPU 上，小型 VAE 保持驻留。
 
-## 🖼️ Showcase
+MPS 不支持上游时间步正弦编码中的 FP64 运算，因此把这一小段计算放到 CPU，保留原始 FP64 精度，
+再将结果传回 MPS。适配通过定点替换上游 pipeline 源码完成；若源码发生变化，会明确报错。
+此外，在清理缓存和同步前等待 Metal 复制完成，处理本地观察到的模型加载死锁。
 
-![示例总览](assets/showcase/overview.webp)
+FP16 DiT 使用苹果 GPU 的对应计算能力；八项 LRU 提示词缓存减少重复编码和模型切换。
+这些改动用于推理适配，没有训练或修改模型权重。
 
-![示例总览 2](assets/showcase/overview2.webp)
+## 常见问题
 
-<a id="citation"></a>
+- **MPS 不可用：** 确认使用原生 arm64 Python 和兼容的 macOS/PyTorch。
+  在终端执行 `.venv/bin/python -c 'import torch; print(torch.backends.mps.is_available())'` 检查。
+- **模型不完整：** 重跑下载命令，可断点续传并校验。需要保留 `pipeline_moss_image.py` 和全部五个组件。
+- **内存不足：** 关闭占用内存较大的应用，减小图片尺寸和生成数量。Mac 自动分阶段加载；
+  CUDA 的 offload 模式和 Compile DiT 不适用于 MPS。
+- **端口占用：** 启动时加 `--port 7861`。
+- **时间步补丁不匹配：** 附模型 revision 和报错提 issue，避免在上游源码变化后静默改变计算。
 
-## 📝 引用
+## 参与与路线
 
-如果你在研究中使用 MOSS-Image，请引用本仓库：
+欢迎[提交问题或机型实测](https://github.com/EdwinjJ1/moss-image-mac/issues/new/choose)，请附芯片、内存、
+macOS、依赖版本、模型、精度、尺寸、步数、提示词是否已缓存，以及耗时。最好同时提供图片和参数文件。
 
-```bibtex
-@misc{mossimage2026,
-  title = {MOSS-Image},
-  author = {{OpenMOSS Team}},
-  year = {2026},
-  howpublished = {\url{https://github.com/OpenMOSS/MOSS-Image}}
-}
-```
+近期先补机型兼容性表，进行 FP16/BF16 及冷提示词/缓存提示词的同条件性能对照，改善安装和内存问题排查。
+量化及更低内存支持属于探索方向。开发与检查方法见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+[群分享文案与初期路线](docs/LAUNCH_ZH.md) 可直接取用。
 
-<a id="license"></a>
+## 上游与许可
 
-## 📄 许可与致谢
+代码沿用 [Apache-2.0](LICENSE)，保留上游作者署名与提交历史。
+模型权重单独下载，使用条款请查看对应上游模型卡；仓库不包含模型权重。
 
-推理代码采用 [Apache License 2.0](LICENSE)。
+- [OpenMOSS/MOSS-Image](https://github.com/OpenMOSS/MOSS-Image)
+- [原始中文说明](README_UPSTREAM_ZH.md) · [Original README](README_UPSTREAM.md)
+- [中文用户指南](USERGUIDE_ZH.md) · [English user guide](USERGUIDE.md)
+- [上游 ComfyUI 集成](comfyui/README_ZH.md)（Mac 推荐先走本页快速开始）
 
-感谢 Diffusers、Qwen 和 FLUX 团队。
-
-<a id="star-history"></a>
-
-## ⭐ Star History
-
-<a href="https://www.star-history.com/?repos=OpenMOSS%2FMOSS-Image&amp;type=date">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=OpenMOSS/MOSS-Image&amp;type=date&amp;theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=OpenMOSS/MOSS-Image&amp;type=date" />
-    <img alt="Star 增长历史" src="https://api.star-history.com/chart?repos=OpenMOSS/MOSS-Image&amp;type=date" />
-  </picture>
-</a>
+除明确标注的 Mac 样图外，仓库中的 showcase 图片与 website 继承自上游，不代表 Mac 实测。
+本分支的发布流程不包含上游官网部署或 ComfyUI 注册发布。

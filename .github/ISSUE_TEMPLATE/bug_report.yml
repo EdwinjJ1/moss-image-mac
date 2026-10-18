@@ -1,0 +1,26 @@
+name: Bug report / 故障反馈
+description: Installation or generation problem on Mac
+labels: [bug]
+body:
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment / 环境
+      description: Chip, unified memory, macOS, Python and torch/diffusers/transformers versions.
+      placeholder: M1 Max, 32 GB, macOS ..., Python ...
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps and settings / 复现步骤和参数
+      description: Command, model, resolution, steps, precision, and whether the prompt was cached.
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: Expected and actual behavior / 预期与实际结果
+      description: Include the traceback. Remove personal paths and secrets before posting.
+    validations:
+      required: true

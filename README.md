@@ -1,306 +1,136 @@
-<div align="center">
-  <p>
-    <img src="assets/lockup-light.svg#gh-light-mode-only" alt="MOSS-Image" width="520">
-    <img src="assets/lockup-dark.svg#gh-dark-mode-only" alt="MOSS-Image" width="520">
-  </p>
-  <p>
-    <a href="https://huggingface.co/OpenMOSS-Team/MOSS-Image-Base"><img alt="Hugging Face · MOSS-Image-Base" src="https://img.shields.io/badge/🤗%20Hugging%20Face-MOSS--Image--Base-ffc107?style=flat-square"></a>
-    &nbsp;
-    <a href="https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT"><img alt="Hugging Face · MOSS-Image-SFT" src="https://img.shields.io/badge/🤗%20Hugging%20Face-MOSS--Image--SFT-ffc107?style=flat-square"></a>
-    &nbsp;
-    <a href="https://modelscope.cn/models/openmoss/MOSS-Image-Base"><img alt="ModelScope · MOSS-Image-Base" src="assets/modelscope-base-badge.svg"></a>
-    &nbsp;
-    <a href="https://modelscope.cn/models/openmoss/MOSS-Image-SFT"><img alt="ModelScope · MOSS-Image-SFT" src="assets/modelscope-sft-badge.svg"></a>
-    &nbsp;
-    <a href="https://huggingface.co/spaces/OpenMOSS-Team/MOSS-Image"><img alt="Hugging Face Spaces · Demo" src="https://img.shields.io/badge/🤗%20Spaces-Demo-4f46e5?style=flat-square"></a>
-    &nbsp;
-    <a href="https://openmoss.github.io/MOSS-Image/"><img alt="Homepage" src="https://img.shields.io/badge/🌐%20Project-Homepage-2563eb?style=flat-square"></a>
-    &nbsp;
-    <a href="paper/MOSS_Image_Technical_Report.pdf"><img alt="Technical Report" src="https://img.shields.io/badge/📄%20Paper-Technical_Report-b31b1b?style=flat-square"></a>
-    &nbsp;
-    <a href="https://x.com/Open_MOSS"><img alt="Follow OpenMOSS on X" src="https://img.shields.io/badge/Follow-OpenMOSS-000000?style=flat-square&amp;logo=x&amp;logoColor=white"></a>
-    &nbsp;
-    <a href="https://qm.qq.com/q/hphM7VhaDu"><img alt="MOSS-Image QQ 交流群：755535143" src="https://img.shields.io/badge/QQ-755535143-12B7F5?style=flat-square&amp;logo=qq&amp;logoColor=white"></a>
-    &nbsp;
-    <a href="https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=7a3m2007-815f-409b-9c3d-a4129f5c058e"><img alt="MOSS-Builders Feishu Community" src="assets/feishu-builders-badge.svg"></a>
-    &nbsp;
-    <a href="https://discord.gg/nXFWEyvbb"><img alt="MOSS-Image Discord Community" src="https://img.shields.io/badge/Discord-Community-5865F2?style=flat-square&amp;logo=discord&amp;logoColor=white"></a>
-  </p>
-  <p>
-    <strong>English</strong> &nbsp; | &nbsp; <a href="README_ZH.md">简体中文</a>
-  </p>
-</div>
+# MOSS-Image for Mac
 
+**Run MOSS-Image locally on an Apple silicon Mac with PyTorch Metal/MPS.**
 
-## News
+[简体中文](README_ZH.md) · [Quick start](#quick-start) · [How it works](#how-it-works) · [Report your Mac](https://github.com/EdwinjJ1/moss-image-mac/issues/new/choose)
 
-- **[2026-10-16]** 🎉 We are introducing **MOSS-Image-Base** and **MOSS-Image-SFT**! Code and model weights are publicly available.
+An experimental Mac adaptation of [OpenMOSS/MOSS-Image](https://github.com/OpenMOSS/MOSS-Image),
+maintained by [Evanlin](https://github.com/EdwinjJ1). The model and original inference code are by
+OpenMOSS. This fork adds staged MPS inference, prompt embedding caching, FP16 DiT support,
+and Mac launch scripts while retaining the upstream Gradio UI.
 
-  **Our key highlights:**
+![Generated locally on an M1 Max / 32 GB Mac](assets/samples/mac-chalkboard/01.png)
 
-  - 📐 **Layout control:** Control the placement of text and visual elements.
-  - ✍️ **Strong text rendering:** Generate clear, accurate text within images.
-  - 📜 **Long-prompt support:** Accept text prompts of up to 4K tokens.
-  - 🎨 **Versatile visual styles:** Create high-quality anime and photorealistic images.
-  - 🛠️ **Easy to fine-tune:** Adapt the base model to custom tasks and domains.
-  - ⚡ **Compact and efficient:** Efficient image generation with a 5B backbone.
-  - 🖥️ **Heterogeneous GPU training**: Trained on alternative GPU platforms.
+*Real Mac output: MOSS-Image-SFT, 1024×1024, 20 steps, seed 42, BF16, 320.362 seconds
+for the recorded generation call (including loading/staging and saving). This is one sample,
+not a general performance claim. [Full prompt and parameters](assets/samples/mac-chalkboard/parameters.json).
+The Mac launcher now defaults to FP16; the image above was generated with BF16.*
 
-<a id="user-guide"></a>
+## What you get
 
-## User guide
+- Local text-to-image generation on Apple silicon using Metal/MPS.
+- Staged text encoder and diffusion transformer loading to reduce concurrent memory use.
+- A cache for the last eight prompt embeddings: changing seed, dimensions or steps can reuse them.
+- A Gradio browser interface with image and generation-parameter export.
+- ModelScope downloads with resume and SHA-256 verification when provided by the server.
+- Offline launch after downloading the model and installing dependencies.
 
-Start with the **[English user guide](USERGUIDE.md)** or **[中文用户指南](USERGUIDE_ZH.md)**
-for recommended inference settings, prompt examples, layout input formats, and
-LoRA training guidance.
+## Compatibility
 
-<a id="comfyui"></a>
-
-## ComfyUI
-
-This repository provides a native MOSS-Image plugin for ComfyUI.
-
-Search for **MOSS-Image** in **ComfyUI Manager** to install the plugin.
-We are actively working toward integration into the official ComfyUI repository.
-
-[Installation and usage](comfyui/README.md) · [Example workflow](comfyui/moss-image/example_workflows/moss-image.json)
-
-<a id="prompt-enhancer"></a>
-
-## Prompt enhancer skill
-
-The [MOSS-Image Prompt Enhancer](skills/moss-image-prompt-enhancer/SKILL.md) turns
-image ideas into detailed captions or spatial Layout prompts. It is designed for
-GPT-6-family agents with local file and Python tools. The bundled script converts
-pixel-coordinate drafts into compact JSON with integer centered coordinates;
-it does not call an image-generation service.
-
-Install the [skill folder](skills/moss-image-prompt-enhancer) in your agent's skills
-directory, then invoke `$moss-image-prompt-enhancer` with your image idea, desired
-caption or Layout output, and any canvas dimensions. Paste the compiled result
-into MOSS-Image's positive prompt; for Layout, use the same generation dimensions.
-
-![MOSS-Image-Base and MOSS-Image-SFT](assets/teaser.webp)
-
-## Contents
-
-- [News](#news)
-- [User guide](#user-guide)
-- [ComfyUI](#comfyui)
-- [Prompt enhancer skill](#prompt-enhancer)
-- [Models](#models)
-- [Quick start](#quick-start)
-  - [Installation](#installation)
-  - [Python](#python)
-  - [Gradio](#gradio)
-  - [Sampling settings](#sampling-settings)
-  - [Memory and performance](#memory-and-performance)
-- [Layout-to-image generation](#layout-generation)
-- [Showcase](#showcase)
-- [Citation](#citation)
-- [License and acknowledgements](#license)
-- [Star History](#star-history)
-
-<a id="models"></a>
-
-## 🤗 Models
-
-| Model | Description |
+| Hardware | Status |
 | --- | --- |
-| [MOSS-Image-Base](https://huggingface.co/OpenMOSS-Team/MOSS-Image-Base) · [ModelScope](https://modelscope.cn/models/openmoss/MOSS-Image-Base) | Base text-to-image model |
-| [MOSS-Image-SFT](https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT) · [ModelScope](https://modelscope.cn/models/openmoss/MOSS-Image-SFT) | Fine-tuned from MOSS-Image-Base on curated data |
+| M1 Max, 32 GB unified memory | Recorded successful SFT generation shown above |
+| Other M-series chips / memory sizes | Community testing welcome; not yet verified here |
+| Intel Mac | Unsupported by the Mac launcher |
+| NVIDIA CUDA | Upstream execution path retained; not validated by this Mac release |
 
-### Base vs. SFT
+Start with **32 GB or more unified memory** and about **40 GB free disk space** for one model,
+its download files and the Python environment. The local complete SFT bundle occupies about 25 GB.
+32 GB is the tested configuration, not a proven minimum. Lower-memory Macs and quantization
+are not established by this release. Inference can take minutes.
 
-In this example, SFT produces clearer text grouping and a more organized whiteboard layout.
+## Quick start
 
-| MOSS-Image-Base | MOSS-Image-SFT |
-| --- | --- |
-| ![MOSS-Image-Base](assets/comparison/base.webp) | ![MOSS-Image-SFT](assets/comparison/sft.webp) |
-
-
-<!-- MOSS-Image-Base uses a 42-layer diffusion transformer, a Qwen3.5-9B text encoder,
-and a FLUX.2 VAE. -->
-
-<a id="quick-start"></a>
-
-## 🚀 Quick start
-
-<a id="installation"></a>
-
-### 🛠️ Installation
+Use a native arm64 terminal, a macOS version supported by your PyTorch build, and Python 3.12
+(recommended; project minimum 3.10). The installer uses `python3` by default;
+set `MOSS_PYTHON=python3.12` if needed.
 
 ```bash
-git clone https://github.com/OpenMOSS/MOSS-Image.git
-cd MOSS-Image
-python -m venv .venv
-source .venv/bin/activate
-
-pip install -r requirements.txt
+git clone https://github.com/EdwinjJ1/moss-image-mac.git
+cd moss-image-mac
+bash scripts/setup-mac.sh
+bash scripts/fetch-modelscope.sh MOSS-Image-SFT
+bash scripts/gradio-mac.sh
 ```
 
-<a id="python"></a>
+Open **http://127.0.0.1:7860**. For a first run, set **512×512, 10 steps, one image**.
+Use more steps and a larger size after verifying that generation works.
+The first new prompt loads the text encoder, then the DiT; repeated prompts can skip encoding.
+Do not interpret a period of model loading as a failed generation.
 
-### 🐍 Python
+The installer constrains the five main runtime packages to the versions used locally in
+[constraints-mac.txt](constraints-mac.txt). Downloads require an internet connection.
+The Mac launcher uses only local model files, disables Gradio analytics and binds to localhost.
+Generated images and `parameters.json` are saved under `outputs/gradio/`.
 
-```python
-import torch
-from diffusers import DiffusionPipeline
-
-pipe = DiffusionPipeline.from_pretrained(
-    "OpenMOSS-Team/MOSS-Image-Base",
-    custom_pipeline="pipeline_moss_image",
-    trust_remote_code=True,
-    torch_dtype={"default": torch.bfloat16, "vae": torch.float32},
-)
-pipe.scheduler = type(pipe.scheduler).from_config(pipe.scheduler.config)
-pipe.to("cuda")
-image = pipe(
-    "A wide view of a refrigerator beside a kitchen counter with a fruit bowl. A small sticky note on the refrigerator door is handwritten in Chinese:“\n记得买牛奶和鸡蛋！\n牛奶两盒，鸡蛋一打。\n顺便带一袋面包。”",
-    height=1456,
-    width=1456,
-    num_inference_steps=50,
-    guidance_scale=3.0,
-    uncond_skip_layers=[22],
-    generator=torch.Generator("cpu").manual_seed(42),
-).images[0]
-image.save("refrigerator_note.png")
-```
-
-<a id="gradio"></a>
-
-### 🎨 Gradio
+### Download from Hugging Face instead
 
 ```bash
-pip install -e '.[ui]'
-python gradio_app.py --model OpenMOSS-Team/MOSS-Image-Base
+.venv/bin/hf download OpenMOSS-Team/MOSS-Image-SFT --local-dir models/MOSS-Image-SFT
+bash scripts/gradio-mac.sh
 ```
 
-<a id="sampling-settings"></a>
+Base is also available. Download it with `bash scripts/fetch-modelscope.sh MOSS-Image-Base`,
+then pass `--model "$PWD/models/MOSS-Image-Base"` to the Mac launcher.
 
-### 🎛️ Sampling settings
+### Compare precision
 
-| Setting | Default |
-| --- | --- |
-| Sampler | Flow-matching Euler |
-| Steps | 50 |
-| CFG | 3 |
-| Shift | 5 |
-| Layer skipping | Negative-branch skipping at layer 22 |
-| Negative prompt (Python API) | Empty |
-
-See the [user guide](USERGUIDE.md) for sampling and prompt recommendations.
-
-<a id="memory-and-performance"></a>
-
-### ⚡ Memory and performance
-
-Select Memory mode in Gradio's Advanced settings:
-
-| Mode | Behavior |
-| --- | --- |
-| GPU resident | Keep the entire model on GPU |
-| Component | Move model components between CPU and GPU as needed |
-| Sequential · fallback | Lower memory use with slower inference |
-
-If GPU memory is insufficient, select Sequential or reduce image size.
-Compile DiT is disabled by default and unavailable in Sequential mode.
-
-<a id="layout-generation"></a>
-
-## 📐 Layout-to-image generation
-
-MOSS-Image uses JSON layout inputs to control text placement and object arrangement
-in complex text-to-image compositions. The image below was generated by MOSS-Image
-using layout control.
-
-Layouts can also support controlled editing and user-friendly layout tools.
-By editing text, element descriptions, and bounding boxes, users can adjust
-image content and composition in a structured way.
-
-[![Layout bounding boxes](assets/showcase/layout-bboxes.webp)](assets/showcase/layout-bboxes.svg)
-
-Paste the layout JSON into Gradio’s Prompt field to specify the scene, text,
-objects, and their positions. The following example uses a `summary`/`items` layout for a **1024×1024**
-canvas. Save it as `layout.json`:
-
-```json
-{
-  "summary": {
-    "meta": ["poster"],
-    "canvas": "single",
-    "caption": "A minimalist travel poster with a cream background, a blue mountain illustration, and the title EXPLORE at the top."
-  },
-  "items": [
-    {
-      "label": "text",
-      "caption": "Large dark-blue uppercase title centered at the top.",
-      "text": "EXPLORE",
-      "bbox": [-416, -384, -288, 384]
-    },
-    {
-      "label": "object",
-      "caption": "A flat blue mountain illustration in the lower center.",
-      "bbox": [-192, -288, 384, 288]
-    }
-  ],
-  "bbox_coord_space": "abs_centralized",
-  "bbox_format": "yxyx"
-}
+```bash
+MOSS_MPS_DIT_DTYPE=bfloat16 bash scripts/gradio-mac.sh
 ```
 
-- `summary.caption` describes the overall scene and style.
-- `items` describes individual elements: `label`, `caption`, and `bbox`, with
-  `text` for the words to render.
-- `bbox_format: "yxyx"` specifies `[y_min, x_min, y_max, x_max]`.
-- `bbox_coord_space: "abs_centralized"` uses pixel coordinates relative to the
-  canvas center. On a 1024×1024 canvas, each axis runs from −512 to +512;
-  x increases to the right and y increases downward. For a canvas of width W
-  and height H, subtract W/2 from ordinary x coordinates and H/2 from y coordinates.
+Default DiT precision is FP16 in the launcher. The text encoder uses BF16 and the VAE FP32.
+These are floating-point inference modes; no weight quantization is applied.
 
-Keep the coordinates consistent with the requested output dimensions. In Gradio,
-paste the JSON into the prompt field and set the matching width and height. With
-the Python API, pass `json.dumps(layout, ensure_ascii=False)` as the prompt string.
+## How it works
 
-<a id="showcase"></a>
+The Qwen text encoder (~17 GB) and diffusion transformer (~10 GB) create memory pressure
+when resident together on the tested 32 GB Mac. [mps_runtime.py](mps_runtime.py) loads the
+text encoder to produce prompt embeddings, releases it, then loads the DiT for sampling.
+Only one of those two large models is kept on the GPU at a time; the small VAE stays resident.
 
-## 🖼️ Showcases
+MPS does not support the upstream timestep sinusoid's FP64 calculation. That calculation
+runs on CPU at FP64 precision and returns the result to MPS. A targeted pipeline patch fails
+with an explicit error if the upstream source changes. The runtime also drains pending Metal
+copies before cache clearing/synchronization to avoid a loading deadlock observed locally.
 
-![Examples overview](assets/showcase/overview.webp)
+The default launcher uses FP16 DiT arithmetic. Prompt embeddings use an eight-entry LRU cache,
+which saves encoding and model-swapping work for repeated prompts. This adapts inference;
+it does not train or modify the model weights.
 
-![Examples overview 2](assets/showcase/overview2.webp)
+## Troubleshooting
 
-<a id="citation"></a>
+- **MPS unavailable:** use native arm64 Python and a supported macOS/PyTorch combination.
+  Run `.venv/bin/python -c 'import torch; print(torch.backends.mps.is_available())'` in Terminal.
+- **Missing/incomplete model:** rerun the download command. It resumes partial files and verifies
+  completed files. Keep the full bundle, including `pipeline_moss_image.py` and all five components.
+- **Memory exhausted:** close other memory-heavy apps; reduce resolution and image count.
+  Mac uses staged loading automatically. CUDA offload modes and Compile DiT are unavailable on MPS.
+- **Port in use:** run `bash scripts/gradio-mac.sh --port 7861`.
+- **Pipeline changed / precision patch mismatch:** preserve the error and open an issue with
+  the model revision. The compatibility check intentionally stops instead of silently changing math.
 
-## 📝 Citation
+## Contributing and roadmap
 
-If you use MOSS-Image in your research, please cite this repository:
+[Report bugs or hardware results](https://github.com/EdwinjJ1/moss-image-mac/issues/new/choose).
+Please include chip, memory, macOS, dependency versions, model, precision, dimensions, steps,
+cold/warm prompt status and elapsed time. Images with their `parameters.json` are especially useful.
 
-```bibtex
-@misc{mossimage2026,
-  title = {MOSS-Image},
-  author = {{OpenMOSS Team}},
-  year = {2026},
-  howpublished = {\url{https://github.com/OpenMOSS/MOSS-Image}}
-}
-```
+Near-term work: expand the hardware compatibility table, publish controlled FP16/BF16 and
+cold/warm prompt comparisons, and improve first-run installation and memory diagnostics.
+Quantization and lower-memory support are exploratory. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-<a id="license"></a>
+## Upstream and license
 
-## 📄 License and acknowledgements
+Code is under [Apache-2.0](LICENSE); upstream authorship and commit history are preserved.
+Model weights are downloaded separately: consult the corresponding upstream model card for their
+terms. No model weights are included in this repository.
 
-The standalone pipeline code is provided under the [Apache License 2.0](LICENSE).
+- [OpenMOSS/MOSS-Image](https://github.com/OpenMOSS/MOSS-Image)
+- [Original README](README_UPSTREAM.md) · [原始中文说明](README_UPSTREAM_ZH.md)
+- [Original user guide](USERGUIDE.md) · [中文用户指南](USERGUIDE_ZH.md)
+- [Upstream ComfyUI integration](comfyui/README.md) (not the recommended Mac quick start)
 
-We thank the Diffusers, Qwen and FLUX teams.
-
-<a id="star-history"></a>
-
-## ⭐ Star History
-
-<a href="https://www.star-history.com/?repos=OpenMOSS%2FMOSS-Image&amp;type=date">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=OpenMOSS/MOSS-Image&amp;type=date&amp;theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=OpenMOSS/MOSS-Image&amp;type=date" />
-    <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=OpenMOSS/MOSS-Image&amp;type=date" />
-  </picture>
-</a>
+Except for the labeled Mac sample above, bundled showcase images and the website are inherited
+from upstream and should not be read as Mac benchmarks. Upstream homepage deployment and
+ComfyUI registry publishing are not part of this fork's release process.

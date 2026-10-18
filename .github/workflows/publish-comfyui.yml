@@ -12,6 +12,7 @@ concurrency:
 
 jobs:
   publish:
+    if: github.repository == 'OpenMOSS/MOSS-Image'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

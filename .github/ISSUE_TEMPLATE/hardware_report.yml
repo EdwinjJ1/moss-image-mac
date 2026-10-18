@@ -1,0 +1,18 @@
+name: Mac hardware report / 机型实测
+description: Help build the Apple silicon compatibility table
+labels: [hardware-report]
+body:
+  - type: textarea
+    id: environment
+    attributes:
+      label: Hardware and software / 软硬件环境
+      description: Chip, unified memory, macOS, Python and package versions.
+    validations:
+      required: true
+  - type: textarea
+    id: generation
+    attributes:
+      label: Generation / 生成结果
+      description: Model, resolution, steps, seed, dtype, cold/warm prompt, elapsed time, success or failure. Attach the image and parameters.json if possible.
+    validations:
+      required: true

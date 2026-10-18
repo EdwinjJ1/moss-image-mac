@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "moss-image"
 version = "0.1.0"
-description = "Standalone MOSS-Image text-to-image inference with Diffusers"
+description = "MOSS-Image local inference for Apple silicon Macs with staged PyTorch MPS loading"
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
@@ -18,9 +18,14 @@ dependencies = [
 dev = ["pytest>=8", "ruff>=0.11"]
 ui = ["gradio>=6.30"]
 
+[project.urls]
+Repository = "https://github.com/EdwinjJ1/moss-image-mac"
+Documentation = "https://github.com/EdwinjJ1/moss-image-mac/blob/main/README.md"
+Issues = "https://github.com/EdwinjJ1/moss-image-mac/issues"
+
 [tool.setuptools]
 license-files = ["LICENSE", "LICENSES/*.txt"]
-py-modules = ["inference_runtime", "gradio_app", "gradio_presets"]
+py-modules = ["inference_runtime", "mps_runtime", "gradio_app", "gradio_presets"]
 packages = ["assets"]
 include-package-data = false
 

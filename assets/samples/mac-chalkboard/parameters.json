@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "model": "MOSS-Image-SFT",
+  "pipeline_class": "StagedMOSSImagePipeline",
+  "pipeline_module": "mps_runtime",
+  "parameters": {
+    "prompt": "best quality, masterpiece, A cozy coffee shop chalkboard menu hanging on a wooden wall, warm morning light. The chalkboard is handwritten in white chalk: “今日特调 桂花拿铁 28元”",
+    "negative_prompt": "nsfw, worst quality, bad anatomy, watermark, jpeg artifact",
+    "height": 1024,
+    "width": 1024,
+    "steps": 20,
+    "cfg": 3,
+    "shift": 5,
+    "seed": 42,
+    "num_images": 1,
+    "max_sequence_length": 4096,
+    "uncond_skip_layers": "22",
+    "slg_layers": "",
+    "slg_scale": 0,
+    "slg_start": 0,
+    "slg_stop": 1,
+    "offload": "model",
+    "compile_transformer": false
+  },
+  "sampler": "Euler",
+  "weight_dtype": "bfloat16",
+  "vae_dtype": "float32",
+  "pipeline_sha256": "982c3505ac8dba73dd914c88a2220cc438b80c8a821b463b7348ee4062c02078",
+  "model_config_sha256": {
+    "model_index.json": "ca80b1f562a506e0eb24afb1acb464fb583163e3c240c04e4bc69fea090db173",
+    "scheduler/scheduler_config.json": "707322832cc507dfb8c51c0e0cd04d44ee2d30a9b036b6f3c47d6c17aa71adf0",
+    "transformer/config.json": "3291c3a1c7adc22b8182a0de25ca8ec97474d72715ce84adbab09cc0be24f666",
+    "text_encoder/config.json": "b31ee18a242bcfcccbe740f825f6b1d3ae231b0655eeecb5de3e98d504b7d68c",
+    "vae/config.json": "cc77f3f0ce0357039c71018dc19edaa4fcceb0c2f7488fdc2b9c0580d6baafa1",
+    "tokenizer/chat_template.jinja": "a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715",
+    "tokenizer/tokenizer.json": "06b9509352d2af50381ab2247e083b80d32d5c0aba91c272ca9ff729b6a0e523",
+    "tokenizer/tokenizer_config.json": "bee8eba30f0eb4af73c0fe2cd06d0f89b657d7819941c438157ec42f7c80ea87"
+  },
+  "versions": {
+    "torch": "2.14.1",
+    "diffusers": "0.41.0",
+    "transformers": "5.20.1",
+    "accelerate": "1.15.0"
+  },
+  "gpu": null,
+  "elapsed_seconds": 320.362,
+  "images": [
+    "01.png"
+  ]
+}
